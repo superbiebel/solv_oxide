@@ -6,3 +6,31 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+dyn-clone = "1.0.9"
+dyn-clonable = "0.9.0"
+unsafe_fn = "0.1.2"
+
+[features]
+
+default = ["builtin_standard_solver", "builtin_scorei64", "builtin_hill_climbing_score_move_check"]
+
+builtin = []
+
+builtin_movedecider = ["builtin"]
+builtin_hill_climbing = ["builtin_movedecider"]
+builtin_hill_climbing_score_move_check = ["builtin_hill_climbing"]
+
+builtin_score = ["builtin"]
+builtin_scorei64 = ["builtin_score"]
+
+builtin_phase = ["builtin"]
+builtin_standard_phase = ["builtin_phase"]
+
+builtin_solver = ["builtin"]
+builtin_standard_solver = ["builtin_solver"]
+
+builtin_termination = ["builtin"]
+builtin_termination_time = ["builtin_termination"]
+
+
+
