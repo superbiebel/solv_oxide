@@ -12,6 +12,7 @@ impl<SolutionType, PhaseScopeType, TerminationType, ScoreType> Solver<SolutionTy
         }
         for phase in &mut self.phases {
             if !self.termination.phase_started(solution) {
+                todo!("Standard Solver"); //TODO implement phase solving for StandardSolver
                 return;
             }
         }
