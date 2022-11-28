@@ -14,13 +14,35 @@ pub mod interface {
     }
     pub(crate) trait Termination<SolutionType, ScoreType> {
         ///If this method returns false, stop immediately
-        fn solving_started(&mut self, solution: &SolutionType) -> bool;
+        #[allow(unused_variables)]
+        fn solver_started(&mut self, solution: &SolutionType) -> bool;
         ///If this method returns false, stop immediately
+        #[allow(unused_variables)]
         fn phase_started(&mut self, solution: &SolutionType) -> bool;
+        ///If the Solver/Phase should stop immediately.
+        #[allow(unused_variables)]
+        fn should_stop(&self, score: &Option<ScoreType>, solution: &SolutionType) -> StopType {
+            let stop_solver = self.should_stop_solver(score, solution);
+            let stop_phase = self.should_stop_phase(score, solution);
+            if stop_solver == stop_phase && stop_phase {
+                StopType::StopPhaseAndSolver
+            } else if stop_phase {
+                StopType::StopPhase
+            } else {
+                StopType::StopSolver
+            }
+        }
         ///If this method returns false, stop immediately
+        #[allow(unused_variables)]
         fn should_stop_solver(&self, score: &Option<ScoreType>, solution: &SolutionType) -> bool;
+        #[allow(unused_variables)]
         fn should_stop_phase(&self, score: &Option<ScoreType>, solution: &SolutionType) -> bool;
     }
+    #[derive(Debug, Eq, PartialEq)]
+    pub enum StopType {
+        StopSolver, StopPhase, StopPhaseAndSolver
+    }
+
     ///This represents an algorithm like Hill Climbing which will choose which moves will be applied.
     pub(crate) trait MoveDecider<SolutionType, ScoreType, MoveChangeType> {
         fn should_apply(&mut self, move_check: Box<dyn ExecutableMove<SolutionType, MoveChangeType>>, score: ScoreType, islast: bool)
