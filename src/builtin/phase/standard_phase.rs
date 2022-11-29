@@ -13,3 +13,5 @@ impl<SolutionType, ScoreType, MoveChangeType, ScoreCalculatorType, PhaseScopeTyp
 
     }
 }
+pub struct StandardPhaseScope {
+}
