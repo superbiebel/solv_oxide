@@ -35,7 +35,7 @@ impl<SolutionType, ScoreType> Termination<SolutionType, ScoreType> for TimeTermi
         match self.termination_level {
             TerminationLevel::Solver { solver_start, max_time } => {
                 //If this happens it means the begin time of the solver wasn't initialized when it should. Check if you called solving_started before phase_started.
-                check_if_longer(solver_start.expect("phase_started was called with a terminationLevel::Solver and the solver begin time None"), &max_time)
+                !check_if_longer(solver_start.expect("phase_started was called with a terminationLevel::Solver and the solver begin time None"), &max_time)
             }
             TerminationLevel::Phase { mut phase_start, .. } => {
                 phase_start = Some(SystemTime::now());
@@ -43,7 +43,7 @@ impl<SolutionType, ScoreType> Termination<SolutionType, ScoreType> for TimeTermi
                     phase_start,
                     max_time: Default::default(),
                 };
-                false
+                true
             }
         }
     }
