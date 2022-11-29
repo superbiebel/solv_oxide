@@ -119,7 +119,7 @@ mod tests {
     fn time_test_phase_uninit_panic() {
         let solution = TestSolution{};
 
-        let mut termination = TimeTermination {
+        let termination = TimeTermination {
             termination_level: TerminationLevel::Phase {
                 phase_start: None,
                 max_time: Duration::from_secs(1),
@@ -132,7 +132,7 @@ mod tests {
     fn time_test_solver_uninit_panic() {
         let solution = TestSolution{};
 
-        let mut termination = TimeTermination {
+        let termination = TimeTermination {
             termination_level: TerminationLevel::Solver {
                 solver_start: None,
                 max_time: Duration::from_secs(1),
