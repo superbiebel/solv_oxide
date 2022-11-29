@@ -43,7 +43,7 @@ impl<SolutionType, ScoreType> Termination<SolutionType, ScoreType> for TimeTermi
                     phase_start,
                     max_time: Default::default(),
                 };
-                true
+                false
             }
         }
     }
