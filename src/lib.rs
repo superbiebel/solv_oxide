@@ -79,7 +79,8 @@ pub mod interface {
         fn generate(&mut self, iteration: u64, solution: SolutionType);
     }
     #[clonable]
-    pub trait ExecutableMove<SolutionType,MoveChangeType> : Clone{
+    pub trait ExecutableMove<SolutionType,MoveChangeType> : Clone {
+        fn identifier(&self) -> String;
         fn do_move(&self, solution: &mut SolutionType) -> Option<(Box<dyn ExecutableMove<SolutionType, MoveChangeType>>, MoveChangeType)> {
             if self.is_doable(solution) {
                 return Some(unsafe { self.do_move_unchecked(solution) });
