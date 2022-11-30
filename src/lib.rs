@@ -1,9 +1,10 @@
 #[cfg(feature = "builtin")]
+#[allow(invalid_doc_attributes)]
 pub mod builtin;
 #[allow(invalid_doc_attributes)]
 pub mod interface {
-    use unsafe_fn::unsafe_fn;
     use dyn_clonable::clonable;
+    use unsafe_fn::unsafe_fn;
 
     pub(crate) trait Solver<SolutionType> {
         fn start_solving(&mut self, solution: &mut SolutionType);
