@@ -1,10 +1,11 @@
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
-use crate::interface::{Termination};
 
-struct TimeTermination {
-    termination_level: TerminationLevel,
+use crate::interface::Termination;
+
+pub struct TimeTermination {
+    pub termination_level: TerminationLevel,
 }
-enum TerminationLevel{
+pub enum TerminationLevel{
     Solver {
         solver_start: Option<SystemTime>,
         max_time: Duration,
@@ -73,8 +74,9 @@ fn check_if_longer(start: SystemTime, duration: &Duration) -> bool {
 }
 #[cfg(test)]
 mod tests {
-    use std::thread::{sleep};
-    use std::time::{Duration};
+    use std::thread::sleep;
+    use std::time::Duration;
+
     use crate::builtin::termination::time_termination::{TerminationLevel, TimeTermination};
     use crate::interface::StopType::{StopPhase, StopSolver};
     use crate::interface::Termination;
