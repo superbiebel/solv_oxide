@@ -3,6 +3,7 @@ use std::marker::PhantomData;
 use crate::builtin::phase::standard_phase::StandardPhaseScope;
 use crate::interface::{Phase, Solver, StopType, Termination};
 
+#[allow(clippy::type_complexity)]
 struct StandardSolver<SolutionType, TerminationType, ScoreType> where TerminationType: Termination<SolutionType, ScoreType> {
     phases: Vec<Box<dyn for <'a> Phase<SolutionType, StandardPhaseScope<'a, SolutionType, ScoreType, TerminationType>>>>,
     termination: TerminationType,
