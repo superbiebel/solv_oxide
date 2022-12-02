@@ -3,6 +3,8 @@
 pub mod builtin;
 #[allow(invalid_doc_attributes)]
 pub mod interface {
+    use std::iter::FusedIterator;
+
     use dyn_clonable::clonable;
     use unsafe_fn::unsafe_fn;
 
@@ -13,7 +15,7 @@ pub mod interface {
     pub(crate) trait Phase<SolutionType, PhaseScopeType> {
         fn start_solving(&mut self, solution: &mut SolutionType, phase_scope: PhaseScopeType);
     }
-    pub(crate) trait Termination<SolutionType, ScoreType> {
+    pub trait Termination<SolutionType, ScoreType> {
         ///If this method returns false, stop immediately
         #[allow(unused_variables)]
         fn solver_started(&mut self, solution: &SolutionType) -> bool;
@@ -75,8 +77,10 @@ pub mod interface {
         fn recalculate_score(&mut self, solution: &SolutionType) -> ScoreType;
     }
 
-    trait MoveGenerator<SolutionType> {
-        fn generate(&mut self, iteration: u64, solution: SolutionType);
+    pub trait MoveGenerator<SolutionType, MoveChangeType, MoveIteratorType: Iterator<Item = dyn ExecutableMove<SolutionType, MoveChangeType>>> {
+        ///This method generates the moves that will be evaluated and scored.
+        ///The `max_amount` arg will hint to the generator that giving more moves then this amount is useless and probably won't be evaluated.
+        fn generate(&mut self, max_amount: usize, solution: &SolutionType) -> MoveIteratorType;
     }
     #[clonable]
     pub trait ExecutableMove<SolutionType,MoveChangeType> : Clone {
