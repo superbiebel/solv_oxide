@@ -26,6 +26,7 @@ builtin_scorei64 = ["builtin_score"]
 
 builtin_phase = ["builtin"]
 builtin_standard_phase = ["builtin_phase"]
+builtin_standard_phase_move_decider_corrupt_check = ["builtin_standard_phase"]
 
 builtin_solver = ["builtin"]
 builtin_standard_solver = ["builtin_solver"]
