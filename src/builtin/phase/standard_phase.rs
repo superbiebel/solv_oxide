@@ -1,6 +1,6 @@
 use std::marker::PhantomData;
 
-use crate::interface::{ExecutableMove, MoveDecider, MoveGenerator, Phase, Score, ScoreCalculator, StopType, Termination};
+use crate::interface::{ExecutableMove, MoveDecider, MoveGenerator, Phase, ScoreCalculator, StopType, Termination};
 
 struct StandardPhase<SolutionType, ScoreType, MoveChangeType, ScoreCalculatorType, MoveDeciderType, MoveGeneratorType, MoveIteratorType>
     where MoveDeciderType: MoveDecider<SolutionType, ScoreType, MoveChangeType>,
