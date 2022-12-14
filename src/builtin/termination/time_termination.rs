@@ -32,6 +32,10 @@ impl<SolutionType, ScoreType> Termination<SolutionType, ScoreType> for TimeTermi
         }
     }
 
+    fn solver_stopped(&mut self, solution: &SolutionType) {
+        todo!()
+    }
+
     fn phase_started(&mut self, _solution: &SolutionType) -> bool {
         match self.termination_level {
             TerminationLevel::Solver { solver_start, max_time } => {
@@ -47,6 +51,18 @@ impl<SolutionType, ScoreType> Termination<SolutionType, ScoreType> for TimeTermi
                 true
             }
         }
+    }
+
+    fn phase_stopped(&mut self, solution: &SolutionType) {
+        todo!()
+    }
+
+    fn step_started(&mut self, solution: &SolutionType) -> bool {
+        todo!()
+    }
+
+    fn step_stopped(&mut self, solution: &SolutionType) {
+        todo!()
     }
 
     fn should_stop_solver(&self, _score: &Option<ScoreType>, _solution: &SolutionType) -> bool {

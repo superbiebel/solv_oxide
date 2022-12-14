@@ -32,7 +32,7 @@ where TerminationType: Termination<SolutionType, ScoreType>,
         }
         loop {
             let mut eval_moves = self.move_generator.generate(0, solution);
-            let mut opt_move = None;
+            let mut _opt_move = None;
             loop {
                 let eval_move_opt = eval_moves.next();
                 let last = eval_move_opt.is_none();
@@ -42,16 +42,15 @@ where TerminationType: Termination<SolutionType, ScoreType>,
                 }
                 let result = self.move_decider.should_apply(eval_move, self.score_calculator.calculate_score(solution), last);
                 if let Some(step_result) = result {
-                    opt_move = Some(step_result);
+                    _opt_move = Some(step_result);
                     break;
                 }
             };
-            let result_move = opt_move.unwrap();
+            let result_move = _opt_move.unwrap();
             result_move.do_move(solution).expect("Move did not return an undo move, this means the move wasn't doable even tho it said that it was when being evaluated.");
             match termination.should_stop(&last_score, solution) {
-                StopType::StopSolver => {}
-                StopType::StopPhase => {break}
-                StopType::StopPhaseAndSolver => {break}
+                StopType::StopSolver | StopType::StopPhase => {return}
+                StopType::None => {}
             }
         }
     }
@@ -60,4 +59,68 @@ pub struct StandardPhaseScope<'b, SolutionType, ScoreType, TerminationType> wher
     pub termination: &'b mut TerminationType,
     pub phantom: PhantomData<SolutionType>,
     pub phantom2: PhantomData<ScoreType>
+}
+#[cfg(test)]
+mod tests {
+    use std::cell::RefCell;
+    use std::ops::Add;
+
+    use crate::builtin::score::hard_soft_score::HardSoftScore;
+    use crate::interface::{StopType, Termination};
+
+    #[test]
+    fn solver_test() {
+        //TODO: properly implement this test
+        struct TestSolution;
+
+        struct TestTermination {
+            times_should_stop: RefCell<u8>,
+            times_solver_started: RefCell<u8>,
+            times_phase_started: RefCell<u8>,
+            times_step_started: RefCell<u8>,
+
+        }
+        impl Termination<TestSolution, HardSoftScore<i32,i32>> for TestTermination {
+            fn solver_started(&mut self, solution: &TestSolution) -> bool {
+                self.times_solver_started.borrow_mut().add(1);
+                true
+            }
+
+            fn solver_stopped(&mut self, solution: &TestSolution) {
+                todo!()
+            }
+
+            fn phase_started(&mut self, solution: &TestSolution) -> bool {
+                self.times_phase_started.borrow_mut().add(1);
+                true
+            }
+
+            fn phase_stopped(&mut self, solution: &TestSolution) {
+                todo!()
+            }
+
+            fn step_started(&mut self, solution: &TestSolution) -> bool {
+                self.times_step_started.borrow_mut().add(1);
+                true
+            }
+
+            fn step_stopped(&mut self, solution: &TestSolution) {
+                todo!()
+            }
+
+            fn should_stop(&self, score: &Option<HardSoftScore<i32, i32>>, solution: &TestSolution) -> StopType {
+                self.times_should_stop.borrow_mut().add(1);
+                StopType::None
+            }
+
+            fn should_stop_solver(&self, score: &Option<HardSoftScore<i32, i32>>, solution: &TestSolution) -> bool {
+                unreachable!()
+            }
+
+            fn should_stop_phase(&self, score: &Option<HardSoftScore<i32, i32>>, solution: &TestSolution) -> bool {
+                unreachable!()
+            }
+        }
+    }
+
 }

@@ -3,8 +3,6 @@
 pub mod builtin;
 #[allow(invalid_doc_attributes)]
 pub mod interface {
-    use std::iter::FusedIterator;
-
     use dyn_clonable::clonable;
     use unsafe_fn::unsafe_fn;
 
@@ -19,17 +17,28 @@ pub mod interface {
         ///If this method returns false, stop immediately
         #[allow(unused_variables)]
         fn solver_started(&mut self, solution: &SolutionType) -> bool;
+
+        #[allow(unused_variables)]
+        fn solver_stopped(&mut self, solution: &SolutionType);
+
         ///If this method returns false, stop immediately
         #[allow(unused_variables)]
         fn phase_started(&mut self, solution: &SolutionType) -> bool;
+
+        #[allow(unused_variables)]
+        fn phase_stopped(&mut self, solution: &SolutionType);
+        ///If this method returns false, stop immediately
+        #[allow(unused_variables)]
+        fn step_started(&mut self, solution: &SolutionType) -> bool;
+
+        #[allow(unused_variables)]
+        fn step_stopped(&mut self, solution: &SolutionType);
         ///If the Solver/Phase should stop immediately.
         #[allow(unused_variables)]
         fn should_stop(&self, score: &Option<ScoreType>, solution: &SolutionType) -> StopType {
             let stop_solver = self.should_stop_solver(score, solution);
             let stop_phase = self.should_stop_phase(score, solution);
-            if stop_solver == stop_phase && stop_phase {
-                StopType::StopPhaseAndSolver
-            } else if stop_phase {
+            if stop_phase {
                 StopType::StopPhase
             } else {
                 StopType::StopSolver
@@ -43,7 +52,7 @@ pub mod interface {
     }
     #[derive(Debug, Eq, PartialEq)]
     pub enum StopType {
-        StopSolver, StopPhase, StopPhaseAndSolver
+        None, StopSolver, StopPhase
     }
 
     ///This represents an algorithm like Hill Climbing which will choose which moves will be applied.

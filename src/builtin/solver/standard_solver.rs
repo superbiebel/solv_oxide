@@ -28,8 +28,7 @@ impl<SolutionType, TerminationType, ScoreType> Solver<SolutionType> for Standard
 
             match self.termination.should_stop(&None, solution) {
                 StopType::StopSolver => { return }
-                StopType::StopPhase => {}
-                StopType::StopPhaseAndSolver => { return }
+                _ => {}
             }
         }
     }

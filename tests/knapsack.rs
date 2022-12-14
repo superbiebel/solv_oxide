@@ -1,18 +1,23 @@
 extern crate core;
 
+use std::cmp::Ordering;
 use std::rc::Rc;
+
 use unsafe_fn::unsafe_fn;
-use solv_oxide::interface::{ProblemModel, SolutionModel, ScoreCalculator, IncrementalScoreCalculator, ExecutableMove};
+
 use solv_oxide::builtin::score::hard_soft_score::HardSoftScore;
+use solv_oxide::interface::{ExecutableMove, IncrementalScoreCalculator, ProblemModel, ScoreCalculator, SolutionModel};
 
 #[test]
 fn knapsack_test() {
+
+
     struct KnapsackSolution<const N: usize>{
         items: [bool;N],
         problem: Rc<KnapsackProblem<N>>
     }
     struct KnapsackProblem<const N: usize> {
-        amount: u16,
+        max_cost: u16,
         cost: [u16;N],
     }
 
@@ -33,10 +38,16 @@ fn knapsack_test() {
     }
     impl Clone for RandomFlipMove {
         fn clone(&self) -> Self {
-            todo!()
+            Self {
+                item_nr: self.item_nr,
+                value: self.value,
+            }
         }
     }
     impl ExecutableMove<KnapsackSolution<10>, KnapsackMoveChange> for RandomFlipMove {
+        fn identifier(&self) -> String {
+            String::from("RandomFlipMove for knapsack")
+        }
         #[unsafe_fn]
         fn do_move_unchecked(&self, solution: &mut KnapsackSolution<10>) -> (Box<dyn ExecutableMove<KnapsackSolution<10>, KnapsackMoveChange>>, KnapsackMoveChange) {
             solution.items[self.item_nr] = self.value;
@@ -63,9 +74,24 @@ fn knapsack_test() {
                     0
                 }
             }
-            HardSoftScore {
-                hard_score: 0,
-                soft_score: -(cost_amount as i16 - 20).abs(),
+            match cost_amount.cmp(&solution.problem.max_cost) {
+                Ordering::Less => {
+                    HardSoftScore {
+                    hard_score: 0,
+                    soft_score: 0,
+                }}
+                Ordering::Equal => {
+                    HardSoftScore {
+                        hard_score: 0,
+                        soft_score: -((solution.problem.max_cost - cost_amount) as i16),
+                    }
+                }
+                Ordering::Greater => {
+                    HardSoftScore {
+                        hard_score: -((cost_amount - solution.problem.max_cost) as i16),
+                        soft_score: 0,
+                    }
+                }
             }
         }
 
@@ -74,7 +100,7 @@ fn knapsack_test() {
         }
     }
     let problem:KnapsackProblem<10> = KnapsackProblem {
-        amount: 20,
+        max_cost: 20,
         cost: [1,2,3,4,5,1,7,7,9,1],
     };
     //impl
@@ -82,9 +108,4 @@ fn knapsack_test() {
         items: [false,false,false,false,false,false,false,false,false,false],
         problem: Rc::new(problem),
     };
-
-
-
-
-    
 }
