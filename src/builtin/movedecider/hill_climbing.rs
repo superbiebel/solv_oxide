@@ -8,7 +8,7 @@ struct HillClimbingAlgorithm<SolutionType, ScoreType, MoveChangeType> {
     current_best_move: Option<Box<dyn ExecutableMove<SolutionType, MoveChangeType>>>
 }
 impl<SolutionType, ScoreType, MoveChangeType> MoveDecider<SolutionType, ScoreType, MoveChangeType> for HillClimbingAlgorithm<SolutionType, ScoreType, MoveChangeType>
-where ScoreType: Score{
+where ScoreType: Score {
     #[allow(clippy::if_same_then_else)]
     fn should_apply(&mut self, move_check: Box<dyn ExecutableMove<SolutionType, MoveChangeType>>, score: ScoreType, islast: bool) -> Option<Box<dyn ExecutableMove<SolutionType, MoveChangeType>>> {
         score_move_none_corrupt_check(self);
