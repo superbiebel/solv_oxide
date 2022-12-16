@@ -29,4 +29,4 @@ impl<SolutionType, TerminationType, ScoreType> Solver<SolutionType> for Standard
             if self.termination.should_stop(&None, solution) == StopType::StopSolver { return }
         }
     }
-    }
+}
