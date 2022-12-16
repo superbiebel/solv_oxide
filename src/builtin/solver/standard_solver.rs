@@ -26,10 +26,7 @@ impl<SolutionType, TerminationType, ScoreType> Solver<SolutionType> for Standard
                 phantom2: Default::default(),
             });
 
-            match self.termination.should_stop(&None, solution) {
-                StopType::StopSolver => { return }
-                _ => {}
-            }
+            if self.termination.should_stop(&None, solution) == StopType::StopSolver { return }
         }
     }
     }
